@@ -7,38 +7,38 @@
 </head>
 <body>
 <form id="uploadForm" enctype="multipart/form-data">
-    <input id="file" type="file" name="file"/>
+    <input id="file" type="file"/>
 </form>
 <button id="upload">上传文件</button>
 </body>
 <script type="text/javascript">
-    $(function () {
-        $("#upload").click(function () {
-            var formData = new FormData($('#uploadForm')[0]);
-            $.ajax({
-                type: 'post',
-                url: "/upload",
-                data: formData,
-                cache: false,
-                processData: false,
-                contentType: false,
-                success: function (data) {
-                    if (!data.state) {
-                        alert(data.msg)
-                        return
-                    }
-                    // alert(JSON.stringify(data));
-                    data.imgs.forEach(function (imgBase64) {
-                        let imgObj = window.document.createElement("img");
-                        imgObj.src = imgBase64
-                        document.body.appendChild(imgObj);
-                    })
-                },
-                error: function () {
-                    alert("上传失败");
-                }
-            });
-        });
-    });
+	$(function () {
+		$("#upload").click(function () {
+			let formData = new FormData($('#file'));
+			$.ajax({
+				type: 'post',
+				url: "/upload",
+				data: formData,
+				cache: false,
+				processData: false,
+				contentType: false,
+				success: function (data) {
+					if (!data.state) {
+						alert(data.msg);
+						return;
+					}
+					// alert(JSON.stringify(data));
+					data.imgs.forEach(function (imgBase64) {
+						let imgObj = window.document.createElement("img");
+						imgObj.src = imgBase64;
+						document.body.appendChild(imgObj);
+					});
+				},
+				error: function () {
+					alert("上传失败");
+				}
+			});
+		});
+	});
 </script>
 </html>
