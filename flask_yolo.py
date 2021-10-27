@@ -21,6 +21,7 @@ import yolo.detect as detect
 
 # 设置允许的文件格式
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'JPG', 'PNG', 'bmp'}
+# i is fish.
 
 
 def allowed_file(filename):
