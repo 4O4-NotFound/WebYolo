@@ -22,8 +22,8 @@
 			};
 		} else {
 			return {
-				w: w * (maxL / l),
-				h: h * (maxL / l)
+				w: w * (l / maxL),
+				h: h * (l / maxL)
 			};
 		}
 	}
@@ -53,7 +53,7 @@
 						let i = setInterval(() => {
 							console.log(imgObj.width, imgObj.height);
 							if (imgObj.width && imgObj.height) {
-								let size = fitSize(imgObj.width, imgObj.height, 1024);
+								let size = fitSize(imgObj.width, imgObj.height, 512);
 								imgObj.width = size.w;
 								imgObj.height = size.h;
 								clearInterval(i);
