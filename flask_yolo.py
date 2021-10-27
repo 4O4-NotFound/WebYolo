@@ -1,10 +1,4 @@
 # -*- coding: utf-8 -*-#
-# Author:       weiz
-# Date:         2019/9/16 14:12
-# Name:         flask_yolo
-# Description: 一个可以在浏览器使用YOLO目标检测的函数，和一个可以通过网络访问的YOLO目标检测的接口
-#              直接运行就可以在浏览器上面输入带检测图片，并返回检测的结果；同时，可以接受通过局域网
-#              访问该接口的服务。
 
 import base64
 import json
@@ -21,16 +15,6 @@ import yolo.detect as detect
 
 # 设置允许的文件格式
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'JPG', 'PNG', 'bmp'}
-# i is fish
-# 阿巴阿巴
-# 阿巴阿巴
-# 阿巴阿巴
-# 阿巴阿巴
-# 阿巴阿巴
-# 阿巴阿巴
-# 阿巴阿巴
-# 阿巴阿巴
-# 阿巴阿巴
 
 def allowed_file(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
