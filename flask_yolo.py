@@ -1,22 +1,21 @@
 # -*- coding: utf-8 -*-#
 
 import base64
-import json
-import numpy as np
 import os
-import yolo.detect as detect
-from PIL import Image
+import uuid
 from datetime import timedelta
-from flask import Flask, render_template, request, jsonify, make_response
-from io import BytesIO
+
+from flask import Flask, render_template, request, jsonify
 from werkzeug.utils import secure_filename
 
+import yolo.detect as detect
+
 # 设置允许的文件格式
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'JPG', 'PNG', 'bmp'}
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'bmp'}
 
 
 def allowed_file(filename):
-	return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 app = Flask(__name__)
@@ -24,7 +23,6 @@ app = Flask(__name__)
 app.send_file_max_age_default = timedelta(seconds = 1)
 
 
-# @app.route('/upload', methods=['POST', 'GET'])
 @app.route('/upload', methods = ['POST', 'GET'])  # 添加路由
 def upload():
 	print(request)
@@ -32,44 +30,33 @@ def upload():
 		f = request.files['file']
 
 		if not (f and allowed_file(f.filename)):
-			return jsonify({"state": False, "msg": "请检查上传的图片类型，仅限于png、PNG、jpg、JPG、bmp"})
+			return jsonify({"state": False, "msg": "请检查上传的图片类型，仅限于PNG、JPG、BMP。"})
 
-		user_input = request.form.get("name")
-		print(user_input)
+		session_id = str(uuid.uuid4())
+		# session_id = str(uuid.uuid5(uuid.NAMESPACE_OID, hashlib.md5(f)))
 
 		base_path = os.path.dirname(__file__)
 
-		upload_path = os.path.join(base_path, 'static/images', secure_filename(f.filename))
+		upload_path = os.path.join(base_path, 'static/images',
+		                           secure_filename(session_id + "." + f.filename.split(".")[1]))
 		f.save(upload_path)
 
-		loc = detect.run(source = upload_path)
+		loc = detect.run(source = upload_path, name = session_id)
 		print(loc)
 		print(os.listdir(loc))
 		img_list = os.listdir(loc)
 		for num in range(0, len(img_list)):
 			img_name = img_list[num]
 			img_list[num] = "data:image/" + img_name.split(".")[1] + ";base64," + \
-							str(base64.b64encode(open(os.path.join(loc, img_name), "rb").read()))[2:][:-1]
-			print(img_list[num])
+			                str(base64.b64encode(open(os.path.join(loc, img_name), "rb").read()))[2:][:-1]
+		# print(img_list[num])
 
+		os.remove(upload_path)
+		shutil.rmtree(loc)
 		return jsonify({"state": True, "imgs": img_list})
 	# return render_template('upload_ok.html', userinput = user_input, val1 = time.time(), data_dict = lab)
 
 	return render_template('upload.html')
-
-
-@app.route('/yolo_service', methods = ['POST'])
-def detection():
-	img = request.stream.read()
-	f = BytesIO(img)
-	image = Image.open(f)
-	image = np.array(image, dtype = 'float32')
-	boxes, lab = detect.run('yolov5s.pt', image)
-
-	rsp = make_response(json.dumps(lab))
-	rsp.mimetype = 'application/json'
-	rsp.headers['Connection'] = 'close'
-	return rsp
 
 
 if __name__ == '__main__':

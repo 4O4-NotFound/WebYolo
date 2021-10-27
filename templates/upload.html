@@ -7,14 +7,30 @@
 </head>
 <body>
 <form id="uploadForm" enctype="multipart/form-data">
-    <input id="file" type="file"/>
+    <input id="file" name="file" type="file"/>
 </form>
-<button id="upload">上传文件</button>
+<button id="btn" type="button">上传文件</button>
+<div id="images"></div>
 </body>
 <script type="text/javascript">
+	function fitSize(w, h, l) {
+		let maxL = Math.max(w, h);
+		if (maxL > l) {
+			return {
+				w: w * (l / maxL),
+				h: h * (l / maxL)
+			};
+		} else {
+			return {
+				w: w * (maxL / l),
+				h: h * (maxL / l)
+			};
+		}
+	}
+
 	$(function () {
-		$("#upload").click(function () {
-			let formData = new FormData($('#file'));
+		$("#btn").click(function () {
+			let formData = new FormData(document.getElementById("uploadForm"));
 			$.ajax({
 				type: 'post',
 				url: "/upload",
@@ -31,7 +47,16 @@
 					data.imgs.forEach(function (imgBase64) {
 						let imgObj = window.document.createElement("img");
 						imgObj.src = imgBase64;
-						document.body.appendChild(imgObj);
+						document.getElementById("images").appendChild(imgObj);
+						let i = setInterval(() => {
+							console.log(imgObj.width, imgObj.height);
+							if (imgObj.width && imgObj.height) {
+								let size = fitSize(imgObj.width, imgObj.height, 1024);
+								imgObj.width = size.w;
+								imgObj.height = size.h;
+								clearInterval(i);
+							}
+						}, 0);
 					});
 				},
 				error: function () {
