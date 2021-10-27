@@ -2,19 +2,18 @@
 
 import base64
 import json
-import os
-from datetime import timedelta
-from io import BytesIO
-
 import numpy as np
-from PIL import Image
-from flask import Flask, render_template, request, jsonify, make_response
-from werkzeug.utils import secure_filename
-
+import os
 import yolo.detect as detect
+from PIL import Image
+from datetime import timedelta
+from flask import Flask, render_template, request, jsonify, make_response
+from io import BytesIO
+from werkzeug.utils import secure_filename
 
 # 设置允许的文件格式
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'JPG', 'PNG', 'bmp'}
+
 
 def allowed_file(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
