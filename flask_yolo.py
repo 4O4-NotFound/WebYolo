@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-#
 
 import base64
+import shutil
 import os
 import uuid
 from datetime import timedelta

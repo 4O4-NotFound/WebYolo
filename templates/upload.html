@@ -47,6 +47,8 @@
 					data.imgs.forEach(function (imgBase64) {
 						let imgObj = window.document.createElement("img");
 						imgObj.src = imgBase64;
+						{#清空上一张#}
+						document.getElementById("images").innerHTML = '';
 						document.getElementById("images").appendChild(imgObj);
 						let i = setInterval(() => {
 							console.log(imgObj.width, imgObj.height);
