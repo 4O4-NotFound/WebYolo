@@ -7,7 +7,7 @@
 </head>
 <body>
 <form id="uploadForm" enctype="multipart/form-data">
-    文件:<input id="file" type="file" name="file"/>
+    <input id="file" type="file" name="file"/>
 </form>
 <button id="upload">上传文件</button>
 </body>
@@ -17,7 +17,7 @@
             var formData = new FormData($('#uploadForm')[0]);
             $.ajax({
                 type: 'post',
-                url: "http://10.96.179.171:5000/upload", //上传文件的请求路径必须是绝对路劲
+                url: "/upload",
                 data: formData,
                 cache: false,
                 processData: false,
@@ -33,9 +33,10 @@
                         imgObj.src = imgBase64
                         document.body.appendChild(imgObj);
                     })
+                },
+                error: function () {
+                    alert("上传失败");
                 }
-            }).error(function () {
-                alert("上传失败");
             });
         });
     });
