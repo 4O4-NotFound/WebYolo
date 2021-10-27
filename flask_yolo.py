@@ -22,7 +22,15 @@ import yolo.detect as detect
 # 设置允许的文件格式
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'JPG', 'PNG', 'bmp'}
 # i is fish
-
+# 阿巴阿巴
+# 阿巴阿巴
+# 阿巴阿巴
+# 阿巴阿巴
+# 阿巴阿巴
+# 阿巴阿巴
+# 阿巴阿巴
+# 阿巴阿巴
+# 阿巴阿巴
 
 def allowed_file(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
